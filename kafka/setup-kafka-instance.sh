@@ -28,7 +28,7 @@ INSTANCE_IP=$(aws ec2 describe-instances \
                 --query 'Reservations[0].Instances[0].PublicIpAddress' \
                 --output text)
 
-sed -i "s/\[INSTANCE_IP\]/$INSTANCE_IP/g" docker-compose-revised.yaml
+sed "s/\[INSTANCE_IP\]/$INSTANCE_IP/g" docker-compose.yaml > docker-compose-revised.yaml
 scp -i "$KEY_PATH" docker-compose-revised.yaml "ec2-user@$INSTANCE_IP:~/docker-compose.yaml"
 
 echo "Docker-compose updated"

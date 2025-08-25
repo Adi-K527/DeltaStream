@@ -1,17 +1,29 @@
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.mysql_operator import MySqlOperator
+from kafka import KafkaProducer
 import requests
+import json
+import os
+
+
+IP = os.getenv("IP")
+producer = KafkaProducer(bootstrap_servers=f'44.202.223.65:9092')
 
 
 def extract_airplane_data():
-    response = requests.get("https://opensky-network.org/api/states/all?lamin=32.55&lomin=96.50&lamax=33.05&lomax=97.20")
+    response = requests.get("https://opensky-network.org/api/states/all?lamin=32.6&lomin=-97.0&lamax=33.1&lomax=-96.4")
     data = response.json()
-    return data
+    
+    for flight in data["states"]:
+        producer.send('airplane-topic', json.dumps(flight).encode('utf-8'))
+    producer.flush()
 
 
 def extract_weather_data():
     response = requests.get("https://api.weather.gov/stations/KDFW/observations/latest")
     data = response.json()
-    return data
+    
+    new_data = {
+        "data": data["properties"]
+    }
+
+    producer.send('weather-topic', json.dumps(new_data).encode('utf-8'))
+    producer.flush()

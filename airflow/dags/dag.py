@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 import requests
 from extract import extract_airplane_data, extract_weather_data
@@ -7,7 +7,7 @@ from transform import transform_data_bronze, transform_data_silver, transform_da
 from load import load_data_to_postgres
 
 
-with DAG(dag_id='etl_dag', schedule_interval='@daily') as dag:
+with DAG(dag_id='etl_dag', schedule='@daily') as dag:
 
     with TaskGroup("extract") as extract_group:
         extract_airplane_data_task = PythonOperator(
