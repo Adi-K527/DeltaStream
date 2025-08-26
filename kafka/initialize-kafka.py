@@ -2,9 +2,7 @@ from kafka.admin import KafkaAdminClient, NewTopic
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
-IP = os.getenv("IP")
+IP = "44.197.229.129"
 
 admin_client = KafkaAdminClient(
     bootstrap_servers=f"{IP}:9092", 

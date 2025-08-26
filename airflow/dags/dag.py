@@ -7,7 +7,7 @@ from transform import transform_data_bronze, transform_data_silver, transform_da
 from load import load_data_to_postgres
 
 
-with DAG(dag_id='etl_dag', schedule='@daily') as dag:
+with DAG(dag_id='extract_dag', schedule='* * * * *') as extract_dag:
 
     with TaskGroup("extract") as extract_group:
         extract_airplane_data_task = PythonOperator(
@@ -20,6 +20,11 @@ with DAG(dag_id='etl_dag', schedule='@daily') as dag:
             python_callable=extract_weather_data
         )
 
+    extract_group
+
+
+
+with DAG(dag_id='transform_load_dag', schedule='*/5 * * * *') as transform_load_dag:
 
     with TaskGroup("transform") as transform_group:
         transform_data_bronze_task = PythonOperator(
@@ -46,5 +51,4 @@ with DAG(dag_id='etl_dag', schedule='@daily') as dag:
             python_callable=load_data_to_postgres
         )
 
-
-    extract_group >> transform_group >> load_group
+    transform_group >> load_group
