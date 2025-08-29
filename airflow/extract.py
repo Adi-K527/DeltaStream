@@ -5,7 +5,7 @@ import os
 
 
 IP = os.getenv("IP")
-producer = KafkaProducer(bootstrap_servers=f'44.197.229.129:9092')
+producer = KafkaProducer(bootstrap_servers=f'44.203.83.38:9092')
 
 
 def extract_airplane_data():

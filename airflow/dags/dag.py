@@ -1,10 +1,9 @@
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
-import requests
 from extract import extract_airplane_data, extract_weather_data
 from transform import transform_data_bronze, transform_data_silver, transform_data_gold
-from load import load_data_to_postgres
+from load import load_data_powerbi
 
 
 with DAG(dag_id='extract_dag', schedule='* * * * *') as extract_dag:
@@ -46,9 +45,9 @@ with DAG(dag_id='transform_load_dag', schedule='*/5 * * * *') as transform_load_
 
 
     with TaskGroup("load") as load_group:
-        load_data_to_postgres_task = PythonOperator(
-            task_id='load_data_to_postgres',
-            python_callable=load_data_to_postgres
+        load_data_powerbi_task = PythonOperator(
+            task_id='load_data_powerbi',
+            python_callable=load_data_powerbi
         )
 
     transform_group >> load_group
