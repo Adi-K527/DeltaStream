@@ -19,4 +19,4 @@ This architecture consists of 2 Airflow DAGs. The Extract DAG runs every minute,
 </br></br>
 ### Conclusion
 ---
-Overall, this project served to offer fundamental hands-on experience in building an end-to-end data engineering workflow.
+Overall, this project served to offer fundamental experience in building an end-to-end data engineering workflow.
